@@ -18,12 +18,12 @@ public class AppManager
     {
         while (true)
         {
-            Console.WriteLine("\nChoose an operation:");
-                Console.WriteLine("1. Task operations");
-                Console.WriteLine("2. Project operations");
-                Console.WriteLine("3. Exit");
+            Console.WriteLine("\nВітаю вас адміністратор (Виберіть з чим вам потрібно працювати):");
+                Console.WriteLine("1. Дія над гостями");
+                Console.WriteLine("2. Дія над номерами");
+                Console.WriteLine("3. Вийти з програми");
                 
-                Console.Write("Enter the operation number: ");
+                Console.Write("Відповідь: ");
                 string input = Console.ReadLine();
                 
                 switch (input)
@@ -37,7 +37,7 @@ public class AppManager
                     case "3":
                         return;
                     default:
-                        Console.WriteLine("Invalid operation number.");
+                        Console.WriteLine("Немає такої операції");
                         break; 
                 }
         }
