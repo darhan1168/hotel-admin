@@ -50,7 +50,16 @@ public class HotelRoomConsoleManager : ConsoleManager<IHotelRoomService, HotelRo
         try
         {
             Console.Clear();
+            var rooms = GetAll().ToList();
             var nameRoom = GetNameRoom();
+            foreach (var room in rooms)
+            {
+                if (room.NameRoom.Equals(nameRoom))
+                {
+                    throw new Exception("Номер вже додан в базу");
+                }
+            }
+            
             var seats = GetSeats(nameRoom);
             var price = GetPrice(nameRoom);
             _service.CreateHotelRoom(new HotelRoom()
@@ -85,7 +94,7 @@ public class HotelRoomConsoleManager : ConsoleManager<IHotelRoomService, HotelRo
             foreach (var room in rooms)
             {
                 Console.WriteLine($"{index} - Назва: {room.NameRoom}, Усього місць: {room.Seats}, Кол-во вільних місць: {room.AvailableSeats}, " +
-                                  $"Ціна: {room.PriceForOneDay}, Гості:");
+                                  $"Ціна: {room.PriceForOneDay}, Id: {room.Id} Гості:");
                 if (room.Guests.Count == 0)
                 {
                     Console.WriteLine("ще не має");

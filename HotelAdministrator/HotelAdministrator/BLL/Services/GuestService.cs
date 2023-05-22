@@ -1,6 +1,7 @@
 using HotelAdministrator.BLL.Interfaces;
 using HotelAdministrator.DAL.Interfaces;
 using HotelAdministrator.Models;
+using Exception = System.Exception;
 
 namespace HotelAdministrator.BLL.Services;
 
@@ -17,16 +18,15 @@ public class GuestService : GenericService<Guest>, IGuestService
     {
         try
         {
+            Add(guest);
             var rooms = _hotelRoomService.GetAll();
             var specialRooms = rooms.Where(r => r.NameRoom.Equals(guest.HotelRoom.NameRoom)).ToList();
             foreach (var specialRoom in specialRooms)
             {
                 specialRoom.Guests.Add(guest);
-                specialRoom.AvailableSeats--;
+                specialRoom.AvailableSeats -= 1;
                 _hotelRoomService.Update(specialRoom.Id, specialRoom);
             }
-            
-            Add(guest);
         }
         catch (Exception ex)
         {
@@ -38,17 +38,20 @@ public class GuestService : GenericService<Guest>, IGuestService
     {
         try
         {
-            var guest = GetById(guestId);
+            Guest guest = GetById(guestId);
             var rooms = _hotelRoomService.GetAll();
             var specialRooms = rooms.Where(r => r.NameRoom.Equals(guest.HotelRoom.NameRoom)).ToList();
             foreach (var specialRoom in specialRooms)
             {
-                specialRoom.Guests.Remove(guest);
-                specialRoom.AvailableSeats++;
+                foreach (var g in specialRoom.Guests)
+                {
+                    Delete(g.Id);
+                    specialRoom.AvailableSeats += 1;
+                }
+                
+                specialRoom.Guests = new List<Guest>();
                 _hotelRoomService.Update(specialRoom.Id, specialRoom);
             }
-            
-            Delete(guestId);
         }
         catch (Exception ex)
         {

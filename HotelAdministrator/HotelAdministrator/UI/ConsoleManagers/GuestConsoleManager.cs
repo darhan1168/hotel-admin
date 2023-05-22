@@ -57,6 +57,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
     {
         try
         {
+            Console.Clear();
             Console.WriteLine("Введіть ім'я");
             Console.Write("Відповідь: ");
             string name = Console.ReadLine();
@@ -100,8 +101,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
             Console.WriteLine("\nВиберіть дію, яку треба зробити:");
             Console.WriteLine("1. Пошук усіх гостей");
             Console.WriteLine("2. Пошук гостя за номером паспорту");
-            Console.WriteLine("3. Пошук гостей за номером");
-            Console.WriteLine("4. Пошук гостей за датою виїзду");
+            Console.WriteLine("3. Пошук гостей за датою виїзду");
 
             Console.Write("Відповідь: ");
             string input = Console.ReadLine();
@@ -118,13 +118,6 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
                     DisplayGuest(_service.GetGuestByNumPassport(numPassport));
                     break;
                 case "3":
-                    Console.WriteLine("Виберіть номер");
-                    _hotelRoomConsoleManager.DisplayAllRooms();
-                    int answer = Int32.Parse(Console.ReadLine());
-                    
-                    DisplayList(_service.GetGuestByHotelRoom(_hotelRoomConsoleManager.GetAll().ToList()[answer - 1]));
-                    break;
-                case "4":
                     var checkOut = GetDateTime();
                     
                     DisplayList(_service.GetGuestByCheckOut(checkOut));
@@ -153,8 +146,10 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
             int answer = Int32.Parse(Console.ReadLine());
             var deleteGuest = guests[answer - 1];
             var check = _service.GetCheck(deleteGuest.Id);
-            _service.DeleteGuest(deleteGuest.Id);
             
+            
+            _service.DeleteGuest(deleteGuest.Id);
+
             Console.WriteLine($"Чєк за {(int)(deleteGuest.CheckOut - deleteGuest.CheckIn).TotalDays} днів - {check}");
         }
         catch (Exception ex)
@@ -165,7 +160,6 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
 
     private DateTime GetDateTime()
     {
-        Console.Clear();
         Console.WriteLine("Введіть день вид'їзду");
         Console.Write("Відповідь: ");
         int day = int.Parse(Console.ReadLine());
@@ -231,7 +225,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
         foreach (var guest in guests)
         {
             Console.WriteLine($"{index} - Ім'я: {guest.Name}, Прізвище: {guest.SurName}, В'їзд: {guest.CheckIn}, Виїзд: {guest.CheckOut}," +
-            $"Номер паспорту: {guest.NumPassport}, Номер: {guest.HotelRoom.NameRoom}");
+            $"Номер паспорту: {guest.NumPassport}, Id: {guest.Id} Номер: {guest.HotelRoom.NameRoom}");
             index++;
         }
     }
