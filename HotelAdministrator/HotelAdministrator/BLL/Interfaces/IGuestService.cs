@@ -14,7 +14,7 @@ public interface IGuestService : IGenericService<Guest>
 
     List<Guest> GetGuestByCheckOut(DateTime checkOut);
     
-    Guest GetGuestByNumPassport(int numPassport);
+    Guest GetGuestByNumPassport(string numPassport);
 
     decimal GetCheck(Guid guestId);
 }

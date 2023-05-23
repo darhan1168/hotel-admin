@@ -95,7 +95,7 @@ public class GuestService : GenericService<Guest>, IGuestService
         }
     }
 
-    public Guest GetGuestByNumPassport(int numPassport)
+    public Guest GetGuestByNumPassport(string numPassport)
     {
         try
         {

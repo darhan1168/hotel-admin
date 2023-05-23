@@ -1,5 +1,6 @@
 
 
+using System.Text.RegularExpressions;
 using HotelAdministrator.BLL.Interfaces;
 using HotelAdministrator.Enums;
 using HotelAdministrator.Models;
@@ -61,14 +62,19 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
             Console.WriteLine("Введіть ім'я");
             Console.Write("Відповідь: ");
             string name = Console.ReadLine();
+            NameOrSurnameValid(name);
+            name = char.ToUpper(name[0]) + name.Substring(1);
             
             Console.WriteLine("Введіть прізвище");
             Console.Write("Відповідь: ");
             string surname = Console.ReadLine();
-            
+            NameOrSurnameValid(surname);
+            surname = char.ToUpper(surname[0]) + surname.Substring(1);
+
             Console.WriteLine("Введіть номер паспорту");
             Console.Write("Відповідь: ");
-            int numPassport = Convert.ToInt32(Console.ReadLine());
+            string numPassport = Console.ReadLine();
+            CheckNumberPassport(numPassport);
 
             var checkOut = GetDateTime();
             var hotelRoom = GetHotelRoom();
@@ -99,7 +105,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
         {
             Console.Clear();
             Console.WriteLine("\nВиберіть дію, яку треба зробити:");
-            Console.WriteLine("1. Пошук усіх гостей");
+            Console.WriteLine("1. Список усіх гостей");
             Console.WriteLine("2. Пошук гостя за номером паспорту");
             Console.WriteLine("3. Пошук гостей за датою виїзду");
 
@@ -113,7 +119,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
                     break;
                 case "2":
                     Console.WriteLine("Введить номер паспорта");
-                    int numPassport = Int32.Parse(Console.ReadLine());
+                    string numPassport = Console.ReadLine();
                     
                     DisplayGuest(_service.GetGuestByNumPassport(numPassport));
                     break;
@@ -225,7 +231,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
         foreach (var guest in guests)
         {
             Console.WriteLine($"{index} - Ім'я: {guest.Name}, Прізвище: {guest.SurName}, В'їзд: {guest.CheckIn}, Виїзд: {guest.CheckOut}," +
-            $"Номер паспорту: {guest.NumPassport}, Id: {guest.Id} Номер: {guest.HotelRoom.NameRoom}");
+            $"Номер паспорту: {guest.NumPassport}, Номер: {guest.HotelRoom.NameRoom}");
             index++;
         }
     }
@@ -239,5 +245,41 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
         
         Console.WriteLine($"Ім'я: {guest.Name}, Прізвище: {guest.SurName}, В'їзд: {guest.CheckIn}, Виїзд: {guest.CheckOut}," +
                           $"Номер паспорту: {guest.NumPassport}, Номер: {guest.HotelRoom.NameRoom}");
+    }
+
+    private void CheckNumberPassport(string numPassport)
+    {
+        string pattern = "^[a-zA-Z0-9]+$";
+        Match match = Regex.Match(numPassport, pattern);
+
+        var guests = _service.GetAll();
+        foreach (var guest in guests)
+        {
+            if (guest.NumPassport.Equals(numPassport))
+            {
+                throw new Exception("Така людина вже є в базі");
+            }
+        }
+        
+        if (!match.Success)
+        {
+            throw new Exception("Для номера паспорта треба використовувати англ букви та цифри");
+        }
+    }
+    
+    private void NameOrSurnameValid(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new Exception("Недопустиме значення");
+        }
+        
+        foreach (char c in name)
+        {
+            if (!char.IsLetter(c) && c != ' ')
+            {
+                throw new Exception("Містяться цифри або пробели");
+            }
+        }
     }
 }

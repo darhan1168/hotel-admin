@@ -94,7 +94,7 @@ public class HotelRoomConsoleManager : ConsoleManager<IHotelRoomService, HotelRo
             foreach (var room in rooms)
             {
                 Console.WriteLine($"{index} - Назва: {room.NameRoom}, Усього місць: {room.Seats}, Кол-во вільних місць: {room.AvailableSeats}, " +
-                                  $"Ціна: {room.PriceForOneDay}, Id: {room.Id} Гості:");
+                                  $"Ціна: {room.PriceForOneDay}, Гості:");
                 if (room.Guests.Count == 0)
                 {
                     Console.WriteLine("ще не має");
