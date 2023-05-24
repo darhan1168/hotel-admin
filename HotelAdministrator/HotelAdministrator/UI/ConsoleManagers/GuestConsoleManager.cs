@@ -222,6 +222,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
 
     private void DisplayList(List<Guest> guests)
     {
+        Console.Clear();
         if (guests.Count == 0)
         {
             throw new Exception("Гостей ще не має");
@@ -238,6 +239,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
 
     private void DisplayGuest(Guest guest)
     {
+        Console.Clear();
         if (guest is null)
         {
             throw new Exception("Такого гостя не має");
@@ -276,7 +278,7 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
         
         foreach (char c in name)
         {
-            if (!char.IsLetter(c) && c != ' ')
+            if (!char.IsLetter(c) || c == ' ')
             {
                 throw new Exception("Містяться цифри або пробели");
             }
