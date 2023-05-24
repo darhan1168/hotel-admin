@@ -171,4 +171,58 @@ public class HotelRoomConsoleManager : ConsoleManager<IHotelRoomService, HotelRo
 
         return prices[nameRoom];
     }
+
+    public void AddStartValues()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{typeof(HotelRoom).Name}.json");
+        if (File.ReadAllText(filePath).Length > 0 && File.ReadAllText(filePath) != "[]")
+        {
+            return;
+        }
+        _service.CreateHotelRoom(new HotelRoom()
+        {
+            Id = Guid.NewGuid(),
+            NameRoom = NameRoom.SingleRoom,
+            Seats = 1,
+            AvailableSeats = 1,
+            Guests = new List<Guest>(),
+            PriceForOneDay = 300
+        });
+        _service.CreateHotelRoom(new HotelRoom()
+        {
+            Id = Guid.NewGuid(),
+            NameRoom = NameRoom.DoubleRoom,
+            Seats = 2,
+            AvailableSeats = 2,
+            Guests = new List<Guest>(),
+            PriceForOneDay = 500
+        });
+        _service.CreateHotelRoom(new HotelRoom()
+        {
+            Id = Guid.NewGuid(),
+            NameRoom = NameRoom.TwinRoom,
+            Seats = 3,
+            AvailableSeats = 3,
+            Guests = new List<Guest>(),
+            PriceForOneDay = 1000
+        });
+        _service.CreateHotelRoom(new HotelRoom()
+        {
+            Id = Guid.NewGuid(),
+            NameRoom = NameRoom.QueenRoom,
+            Seats = 4,
+            AvailableSeats = 4,
+            Guests = new List<Guest>(),
+            PriceForOneDay = 2000
+        });
+        _service.CreateHotelRoom(new HotelRoom()
+        {
+            Id = Guid.NewGuid(),
+            NameRoom = NameRoom.KingRoom,
+            Seats = 5,
+            AvailableSeats = 5,
+            Guests = new List<Guest>(),
+            PriceForOneDay = 5000
+        });
+    }
 }

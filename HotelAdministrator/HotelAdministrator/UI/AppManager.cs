@@ -16,6 +16,8 @@ public class AppManager
 
     public void Start()
     {
+        _hotelRoomConsoleManager.AddStartValues();
+
         while (true)
         {
             Console.WriteLine("\nВітаю вас адміністратор (Виберіть з чим вам потрібно працювати):");
