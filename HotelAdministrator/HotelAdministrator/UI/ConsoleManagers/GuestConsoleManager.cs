@@ -284,4 +284,66 @@ public class GuestConsoleManager : ConsoleManager<IGuestService, Guest>, IConsol
             }
         }
     }
+
+    public void AddStartValues()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{typeof(Guest).Name}.json");
+        if (File.ReadAllText(filePath).Length > 0 && File.ReadAllText(filePath) != "[]")
+        {
+            return;
+        }
+        
+        var rooms = _hotelRoomConsoleManager.GetAll().ToList();
+        if (rooms.Count == 0)
+        {
+            throw new Exception("Номерів ще не має");
+        }
+        
+        var availableRooms1 = rooms.Where(r => r.AvailableSeats > 0).ToList();
+        if (availableRooms1.Count == 0)
+        {
+            throw new Exception("Порожніх номерів не має");
+        }
+
+        _service.RegisterGuest(new Guest()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Дарина",
+            SurName = "Ханина",
+            CheckIn = DateTime.Now.Date,
+            CheckOut = new DateTime(2023, 5, 27),
+            HotelRoom = availableRooms1[0],
+            NumPassport = "1A23V45"
+        });
+        
+        _service.RegisterGuest(new Guest()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Олег",
+            SurName = "Вінник",
+            CheckIn = DateTime.Now.Date,
+            CheckOut = new DateTime(2023, 6, 27),
+            HotelRoom = availableRooms1[1],
+            NumPassport = "1A23745"
+        });
+
+        for (var i = 0; i < 5; i++)
+        {
+            var availableRooms = rooms.Where(r => r.AvailableSeats > 0).ToList();
+            if (availableRooms.Count == 0)
+            {
+                throw new Exception("Порожніх номерів не має");
+            }
+            _service.RegisterGuest(new Guest()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Дарина" + $"{i}",
+                SurName = "Ханина",
+                CheckIn = DateTime.Now.Date,
+                CheckOut = new DateTime(2023, 5, 27),
+                HotelRoom = availableRooms[0],
+                NumPassport = "1A23V45" + $"{i}"
+            });
+        }
+    }
 }
